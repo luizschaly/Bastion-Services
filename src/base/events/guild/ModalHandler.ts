@@ -35,6 +35,10 @@ export default class ModalHandler extends Event {
                       id: "1290345221325852714",
                       deny: [PermissionFlagsBits.ViewChannel],
                     },
+                    {
+                        id: interaction.guild!.roles.everyone.id,
+                        deny: [PermissionFlagsBits.ViewChannel],
+                    },
                   ]
                   for(const key in Roles){
                     //@ts-ignore
