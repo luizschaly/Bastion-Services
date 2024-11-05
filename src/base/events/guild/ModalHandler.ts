@@ -5,6 +5,7 @@ import Event from "../../classes/Event";
 import ticketSchema from "../../schemas/ticket";
 import serverSchema from "../../schemas/server";
 import claimSchema from "../../schemas/claim";
+import Roles from "../../enums/Roles";
 export default class ModalHandler extends Event {
     constructor(client: CustomClient){
         super(client, {
