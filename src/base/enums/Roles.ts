@@ -3,3 +3,5 @@ enum Roles {
     Admin = "1298252900929372214",
     Founder = "1290347865331470378"
 }
+
+export default Roles

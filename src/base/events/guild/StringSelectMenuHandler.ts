@@ -26,6 +26,7 @@ import productSchema from "../../schemas/product";
 import cartSchema from "../../schemas/cart";
 import IProductOption from "../../interfaces/IProductOption";
 import Loaders from "../../enums/Loaders";
+import Roles from "../../enums/Roles";
 
 export default class SelectMenuHandler extends Event {
   constructor(client: CustomClient) {

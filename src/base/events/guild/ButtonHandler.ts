@@ -6,6 +6,7 @@ import Event from "../../classes/Event";
 import Colors from "../../enums/Colors";
 import giveawaySchema from "../../schemas/giveaway";
 import Emojis from "../../enums/Emojis";
+import Roles from "../../enums/Roles"
 import productSchema from "../../schemas/product";
 import cartSchema from "../../schemas/cart";
 import TicketCategory from "../../enums/TicketCategory";
