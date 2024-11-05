@@ -84,10 +84,6 @@ export default class SelectMenuHandler extends Event {
               id: interaction.user.id,
               allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages],
             },
-            {
-              id: interaction.guild.roles.everyone.id,
-              deny: [PermissionFlagsBits.ViewChannel],
-            },
           ],
         });
         const embed = new EmbedBuilder()
