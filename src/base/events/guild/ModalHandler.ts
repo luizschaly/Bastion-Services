@@ -25,18 +25,26 @@ export default class ModalHandler extends Event {
                 .setColor(Colors.Neutral)
                 .setTitle(`${interaction.user.username} Media Ticket`)
                 .addFields([{name: `<:blurpledot:1290116382813323276> Whats your youtube?`, value: `<:brarrow:1290116111672803421> ${youtubeResult}`}, {name: `<:blurpledot:1290116382813323276> Whats your average view count?`, value: `<:brarrow:1290116111672803421> ${viewsResult}`}, {name: `<:blurpledot:1290116382813323276> Do you have any payment expectations?`, value: `<:brarrow:1290116111672803421> ${paymentResult}`}])
-                
+                const permissions = [
+                    {
+                      id: interaction.user.id,
+                      allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages],
+                    },
+                    {
+                      id: "1290345221325852714",
+                      deny: [PermissionFlagsBits.ViewChannel],
+                    },
+                  ]
+                  for(const key in Roles){
+                    //@ts-ignore
+                    permissions.push({id: Roles[key], allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages]})
+                  }
                 const mediaCategoryID = "1297424313632292975"
                 const ticketChannel = await interaction.guild?.channels.create({
                     parent: mediaCategoryID,
                     name: `${interaction.user.username} media`,
                     type: ChannelType.GuildText,
-                    permissionOverwrites: [
-                      {
-                        id: interaction.user.id,
-                        allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages],
-                      }
-                    ],
+                    permissionOverwrites: permissions
                   });
                   const embed2 = new EmbedBuilder()
                 .setColor(Colors.Success)

@@ -73,19 +73,29 @@ export default class SelectMenuHandler extends Event {
             guildObj = await guildSchema.create({GuildID: interaction.guild!.id, LastTicketNum: "0"})
         }
         const newTicketNum = parseInt(guildObj.LastTicketNum!) + 1
+        const permissions = [
+          {
+            id: interaction.user.id,
+            allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages],
+          },
+          {
+            id: "1290345221325852714",
+            deny: [PermissionFlagsBits.ViewChannel],
+          },
+        ]
+        for(const key in Roles){
+          //@ts-ignore
+          permissions.push({id: Roles[key], allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages]})
+        }
         //@ts-ignore
         const ticketCategoryID = TicketCategory[ticketType] as string;
         const ticketChannel = await interaction.guild?.channels.create({
           parent: ticketCategoryID,
           name: `ticket ${(newTicketNum).toString().padStart(4, '0')}`,
           type: ChannelType.GuildText,
-          permissionOverwrites: [
-            {
-              id: interaction.user.id,
-              allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages],
-            },
-          ],
+          permissionOverwrites: permissions,
         });
+        
         const embed = new EmbedBuilder()
         .setColor(Colors.Success)
         .setTitle("Ticket created successfully")
