@@ -146,7 +146,7 @@ export default class ButtonHandler extends Event {
                         break
                     }
                     case "Ark: SE/SA Desync": {
-                        tutorialString = "Download [netlimiter](https://netlimiter.com/) V5.3.6 and netlimiterpatch, setup netlimiter then open netlimiterpatch.exe, then when it asks for path choose where your Local Disk is, then complete the following steps: \n\nWindows key -> Type Services \nClick any of them once and type N \nFind the Netlimiter Service \nRight click -> Stop \nClose the services window \nGo to your NetlimitePatch installation \nCopy the Netlimiter.dll file \nGo to your default Netlimiter installation \nPaste the file \nOpen your NetlimiterPatch exe and start the service where it says"
+                        tutorialString = "Download [netlimiter](https://download.netlimiter.com/nl/netlimiter-5.3.6.0.exe) V5.3.6 and netlimiterpatch, setup netlimiter then open netlimiterpatch.exe, then when it asks for path choose where your Local Disk is, then complete the following steps: \n\nWindows key -> Type Services \nClick any of them once and type N \nFind the Netlimiter Service \nRight click -> Stop \nClose the services window \nGo to your NetlimitePatch installation \nCopy the Netlimiter.dll file \nGo to your default Netlimiter installation \nPaste the file \nOpen your NetlimiterPatch exe and start the service where it says"
                         productFile = "https://www.mediafire.com/file/zl7fwg1hjdodxjy/NetLimiterPatch.exe/file"
                         break
                     }
