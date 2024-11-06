@@ -6,11 +6,6 @@
         "shopId" : "103863",
         "shopApiKey": "254147|CzFCGwrBsvbsT1zCpKGosjihCYAPXzPZSIHoL5Xue70cbef2"
     },
-    "logChannels": {
-        "feedback": "1299178833664278701",
-        "outOfStock": "1299177171247431713",
-        "buyLogs": "1299176618409070592"
-    },
     "desyncApiKey": "fd27085c1b1a36acbe1eb9f0d0e5f01d416c3fcb35aef2ed",
     "cryptomusApiKey": "J1KltJAKTNxwu6ceMfABC0muF6dc1McLUVXGf4MDS85LGiwNlkhEsZzvKm9jxc5AXC94og3vYZOSna8T9qO5ZSRdn8ervya5kcYDVGxtEUsXWsBeaJlyb1na37hjFYKM52"
 

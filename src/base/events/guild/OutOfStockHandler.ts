@@ -2,6 +2,7 @@ import { Embed, EmbedBuilder, Events, Message } from "discord.js";
 import CustomClient from "../../classes/CustomClient";
 import Event from "../../classes/Event";
 import Colors from "../../enums/Colors";
+import Channels from "../../enums/Channels";
 export default class OutOfStockHandler extends Event {
     constructor(client: CustomClient){
         super(client, {
@@ -12,7 +13,7 @@ export default class OutOfStockHandler extends Event {
         })
     }
     async Execute(message: Message): Promise<void> {
-        if(message.channelId != this.client.config.logChannels.outOfStock) return
+        if(message.channelId != Channels.OutOfStockLogs) return
         if(!message.author.bot) return
         if(message.author.id == this.client.user!.id) return
 

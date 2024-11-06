@@ -3,6 +3,7 @@ import CustomClient from "../../classes/CustomClient";
 import Event from "../../classes/Event";
 import Emojis from "../../enums/Emojis";
 import Colors from "../../enums/Colors";
+import Channels from "../../enums/Channels";
 export default class CommandHandler extends Event {
     constructor(client: CustomClient){
         super(client, {
@@ -13,7 +14,7 @@ export default class CommandHandler extends Event {
         })
     }
     async Execute(message: Message): Promise<void> {
-        if(message.channelId != this.client.config.logChannels.feedback) return
+        if(message.channelId != Channels.FeedbackLogs) return
         if(!message.author.bot) return
         if(message.author.id == this.client.user!.id) return
 

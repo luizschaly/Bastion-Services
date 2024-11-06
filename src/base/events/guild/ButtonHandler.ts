@@ -11,6 +11,7 @@ import productSchema from "../../schemas/product";
 import cartSchema from "../../schemas/cart";
 import TicketCategory from "../../enums/TicketCategory";
 import fs from "fs"
+import Channels from "../../enums/Channels";
 export default class ButtonHandler extends Event {
     constructor(client: CustomClient){
         super(client, {
@@ -161,7 +162,15 @@ export default class ButtonHandler extends Event {
                 .setTitle("Product sent")
                 .setDescription("Check your dms with the bot to use the free product.")
                 .setColor(Colors.Success)
+                const embed3 = new EmbedBuilder()
+                .setColor(Colors.Invisible)
+                .setTitle(`${interaction.message.embeds[0].title} Claimed`)
+                .setDescription(`${interaction.user.displayName} has claimed a ${interaction.message.embeds[0].title}`)
                 await interaction.reply({embeds: [embed2], ephemeral: true})
+                const channel = await interaction.guild?.channels.fetch(Channels.GetFreeProductLogs)
+                //@ts-ignore
+                channel!.send({embeds: [embed3]})
+
             }
         }
     }

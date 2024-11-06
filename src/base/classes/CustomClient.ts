@@ -1,4 +1,4 @@
-import { Client, Collection, GatewayIntentBits, Partials } from "discord.js";
+import { Client, Collection, GatewayIntentBits, Invite, Partials } from "discord.js";
 import ICustomClient from "../interfaces/ICustomClient";
 
 import IConfig from "../interfaces/IConfig";
@@ -7,6 +7,7 @@ import Command from "./Command";
 import SubCommand from "./SubCommand";
 import { connect } from "mongoose";
 import GiveawayManager from "./GiveawayManager";
+import InviteManager from "./InviteManager";
 
 export default class CustomClient extends Client implements ICustomClient {
   config: IConfig;
@@ -14,6 +15,8 @@ export default class CustomClient extends Client implements ICustomClient {
   giveawayManager: GiveawayManager;
   commands: Collection<string, Command>;
   subCommands: Collection<string, SubCommand>;
+  invitemanager: InviteManager
+  invites: Collection<string, Collection<string, Invite>>
   constructor() {
     super({ intents: [Object.keys(GatewayIntentBits) as any], partials: [Object.keys(Partials) as any] });
     this.config = require(`${process.cwd()}/data/config.json`);
@@ -21,6 +24,8 @@ export default class CustomClient extends Client implements ICustomClient {
     this.giveawayManager = new GiveawayManager(this)
     this.commands = new Collection();
     this.subCommands = new Collection();
+    this.invitemanager = new InviteManager(this);
+    this.invites = new Collection()
   }
   Init(): void {
     this.LoadHandlers();
@@ -29,6 +34,7 @@ export default class CustomClient extends Client implements ICustomClient {
       .then(() => console.log("Connected to mongodb"))
       .catch((err) => console.log(err));
     this.giveawayManager.LoadGiveaways()
+    this.invitemanager.LoadInvites()
   }
   LoadHandlers(): void {
     this.handler.LoadEvents();

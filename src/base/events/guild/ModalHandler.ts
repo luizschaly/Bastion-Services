@@ -6,6 +6,7 @@ import ticketSchema from "../../schemas/ticket";
 import serverSchema from "../../schemas/server";
 import claimSchema from "../../schemas/claim";
 import Roles from "../../enums/Roles";
+import TicketCategory from "../../enums/TicketCategory";
 export default class ModalHandler extends Event {
     constructor(client: CustomClient){
         super(client, {
@@ -44,7 +45,7 @@ export default class ModalHandler extends Event {
                     //@ts-ignore
                     permissions.push({id: Roles[key], allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages]})
                   }
-                const mediaCategoryID = "1297424313632292975"
+                const mediaCategoryID = TicketCategory.media
                 const ticketChannel = await interaction.guild?.channels.create({
                     parent: mediaCategoryID,
                     name: `${interaction.user.username} media`,
