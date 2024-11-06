@@ -4,6 +4,7 @@ import Event from "../../classes/Event";
 import Colors from "../../enums/Colors";
 import Emojis from "../../enums/Emojis";
 import inviteSchema from "../../schemas/invite";
+import Channels from "../../enums/Channels";
 export default class StickyMessageHandler extends Event {
   constructor(client: CustomClient) {
     super(client, {
@@ -26,7 +27,9 @@ export default class StickyMessageHandler extends Event {
         const embed = new EmbedBuilder()
         .setTitle(`${member.user.tag} Joined`)
         .setFields({name:`${Emojis.BlurpleDot}Invite Code`, value: `${Emojis.BlurpleArrow} ${usedInvite.code}`}, {name:`${Emojis.BlurpleDot}Invited By`, value: `${Emojis.BlurpleArrow} ${usedInvite.inviter?.tag || "Unknown"}`}, {name:`${Emojis.BlurpleDot}Invite Count`, value: `${Emojis.BlurpleArrow} ${usedInvite.uses! + 1}`})
-      
+      const channel = member.guild.channels.fetch(Channels.InvitesLogs)
+      //@ts-ignore
+      channel.send({embeds: [embed]})
       const usesIncrement = usedInvite.uses! - (cachedInvites.get(usedInvite.code)?.uses || 0);
 
       await inviteSchema.updateOne(
