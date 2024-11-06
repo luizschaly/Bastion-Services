@@ -24,6 +24,7 @@ export default class ServerMessagePurchaseMessage extends Command {
        .setURL("https://bastionservices.wtf")
        .setImage("https://i.imgur.com/DVASrCI.png")
        .setDescription("Head to the website if you want to buy with cripto/card, to buy with paypal or PIX open a ticket, feel free to open a ticket if you encounter any problems.")
-        interaction.channel?.send({embeds: [embed]})
+        //@ts-ignore
+       interaction.channel?.send({embeds: [embed]})
     }
 }

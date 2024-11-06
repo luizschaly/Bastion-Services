@@ -24,6 +24,7 @@ export default class OutOfStockHandler extends Event {
         .setTitle(`${productName} has run out of stock.`)
         .setURL(embedData.url!)
         .setColor(Colors.Invisible)
+        //@ts-ignore
         await message.channel.send({embeds:[embed2]})
         message.delete()
     }

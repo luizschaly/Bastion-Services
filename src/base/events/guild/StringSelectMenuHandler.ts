@@ -160,6 +160,7 @@ export default class SelectMenuHandler extends Event {
         .setTitle("Loader sent successfully")
         .setDescription("Check your dms with the bot to get the loader download and instructions")
         .setColor(Colors.Success)
+        //@ts-ignore
         interaction.user.send({embeds: [embed]})
         interaction.reply({embeds: [embed2], ephemeral: true})
         break;

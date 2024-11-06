@@ -32,7 +32,7 @@ export default class CommandHandler extends Event {
         .setDescription(feedback)
         .setColor(Colors.Invisible)
         .addFields({name: ` ${Emojis.BlurpleDot} Rating`, value: `${Emojis.BlurpleArrow} ${starstring}`})
-
+        //@ts-ignore
         await message.channel.send({embeds:[embed2]})
         message.delete()
     }

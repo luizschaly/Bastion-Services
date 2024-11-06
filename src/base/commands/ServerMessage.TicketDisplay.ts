@@ -53,6 +53,7 @@ export default class ServerMessageTicketDisplay extends SubCommand {
               .setEmoji("<:blurplegear:1297639429271195809>")
           );
         const row: any = new ActionRowBuilder().addComponents(selectmenu)
+        //@ts-ignore
         await channel.send({ embeds: [embed], components: [row] });
     }
 }

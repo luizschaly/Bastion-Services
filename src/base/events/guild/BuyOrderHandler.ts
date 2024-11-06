@@ -85,6 +85,7 @@ export default class BuyOrderHandler extends Event {
             inline: true
         })
     }
+    //@ts-ignore
     await message.channel.send({embeds: [embed2]})
     message.delete()
     

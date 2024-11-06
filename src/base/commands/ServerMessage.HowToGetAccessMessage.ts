@@ -22,6 +22,7 @@ export default class ServerMessageHowToGetAccessMessage extends Command {
        .setTitle("How to get access")
        .setColor(Colors.Invisible)
        .setDescription("To get access to our free software you need to invite `3` friends to our discord and verify, after you've done that , click on the `Get` button and the bot will dm you the archive.")
-        interaction.channel?.send({embeds: [embed]})
+        //@ts-ignore
+       interaction.channel?.send({embeds: [embed]})
     }
 }

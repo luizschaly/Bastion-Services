@@ -22,6 +22,7 @@ export default class StickyMessageHandler extends Event {
         .setTitle("How to get customer role?")
         .setDescription("After you bought your product, retrieve the invoice id and the email you used to purchase and run the command </claim:1298802284809027644>")
         .setColor(Colors.Invisible)
+        //@ts-ignore
         await message.channel.send({embeds: [embed]})
     }
     

@@ -77,6 +77,7 @@ export default class ModalHandler extends Event {
                 const row2 = new ActionRowBuilder().addComponents(button2)
                 //@ts-ignore
                 await ticketChannel?.send({embeds: [embed3], components: [row2]})
+                //@ts-ignore
                 await ticketChannel?.send({embeds: [embed]})
                 //@ts-ignore
                 await interaction.reply({embeds: [embed2], components: [row], ephemeral :true})
