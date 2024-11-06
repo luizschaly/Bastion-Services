@@ -8,6 +8,7 @@ export default class InviteManager implements IInviteManager {
         this.client = client
     }
     async LoadInvites(): Promise<void> {
+        console.log("Invites loaded")
         for (const guild of this.client.guilds.cache.values()) {
             const invites = await guild.invites.fetch();
             this.client.invites.set(guild.id, invites);
@@ -36,6 +37,5 @@ export default class InviteManager implements IInviteManager {
               }
             }
           }
-        console.log("Invites loaded")
     }
 }
