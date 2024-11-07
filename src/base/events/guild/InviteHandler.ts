@@ -1,4 +1,4 @@
-import { EmbedBuilder, Events, GuildMember, Message } from "discord.js";
+import { EmbedBuilder, Events, GuildMember, Invite, Message } from "discord.js";
 import CustomClient from "../../classes/CustomClient";
 import Event from "../../classes/Event";
 import Colors from "../../enums/Colors";
@@ -14,38 +14,35 @@ export default class StickyMessageHandler extends Event {
     });
   }
   async Execute(member: GuildMember): Promise<void> {
-    const cachedInvites = this.client.invites.get(member.guild.id);
-    if (!cachedInvites) return;
-
-    const newInvites = await member.guild.invites.fetch();
-    const usedInvite = newInvites.find((invite) => {
-      const cachedInvite = cachedInvites.get(invite.code);
-      return cachedInvite && cachedInvite.uses !== invite.uses;
-    });
-
-    if (usedInvite) {
-        const embed = new EmbedBuilder()
-        .setTitle(`${member.user.tag} Joined`)
-        .setFields({name:`${Emojis.BlurpleDot}Invite Code`, value: `${Emojis.BlurpleArrow} ${usedInvite.code}`}, {name:`${Emojis.BlurpleDot}Invited By`, value: `${Emojis.BlurpleArrow} ${usedInvite.inviter?.tag || "Unknown"}`}, {name:`${Emojis.BlurpleDot}Invite Count`, value: `${Emojis.BlurpleArrow} ${usedInvite.uses! + 1}`})
-      const channel = member.guild.channels.fetch(Channels.InvitesLogs)
-      //@ts-ignore
-      channel.send({embeds: [embed]})
-      const usesIncrement = usedInvite.uses! - (cachedInvites.get(usedInvite.code)?.uses || 0);
-
-      await inviteSchema.updateOne(
-        { GuildID: member.guild.id, InviteCode: usedInvite.code },
-        { $inc: { uses: usesIncrement } }
-      );
-
-      await inviteSchema.create({
-        GuildID: member.guild.id,
-        InvitedBy: usedInvite.inviter?.id || 'Unknown',
-        InviteCode: usedInvite.code,
-      });
-    } else {
-      console.log(`${member.user.tag} joined, but the invite used couldn't be determined.`);
-    }
-
-    this.client.invites.set(member.guild.id, newInvites);
+    const cachedInvites = this.client.invites.get(member.guild.id)
+    setTimeout(async () => {
+        const newInvites = await member.guild.invites.fetch();
+        const usedInvite = newInvites!.find((invite: Invite) => {
+            const cachedInvite = cachedInvites!.get(invite.code);
+            return cachedInvite && cachedInvite.uses !== invite.uses;
+          });
+          const embed = new EmbedBuilder()
+          .setTitle(`${member.user.tag} Joined`)
+          .setColor(Colors.Invisible)
+          if (usedInvite) {
+              embed.setFields({name:`${Emojis.BlurpleDot}Invite Code`, value: `${Emojis.BlurpleArrow} ${usedInvite.code}`}, {name:`${Emojis.BlurpleDot}Invited By`, value: `${Emojis.BlurpleArrow} ${usedInvite.inviter?.tag || "Unknown"}`}, {name:`${Emojis.BlurpleDot}Invite Count`, value: `${Emojis.BlurpleArrow} ${usedInvite.uses! + 1}`})
+            await inviteSchema.updateOne(
+              { GuildID: member.guild.id, InviteCode: usedInvite.code },
+              { $inc: { uses: 1 } }
+            );
+      
+            await inviteSchema.create({
+              GuildID: member.guild.id,
+              InvitedBy: usedInvite.inviter?.id || 'Unknown',
+              InviteCode: usedInvite.code,
+            });
+          } else {
+              embed.setDescription("Invite used couldn't be determined.")
+          }
+          const channel = await member.guild.channels.fetch(Channels.InvitesLogs)
+        //@ts-ignore
+          channel.send({embeds: [embed]})
+          this.client.invites.set(member.guild.id, newInvites!);
+    }, 5000);
   }
 }
