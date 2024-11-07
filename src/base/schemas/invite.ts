@@ -4,7 +4,7 @@ import { model, Schema } from "mongoose";
 
 let inviteSchema = new Schema({
   GuildID: String,
-  InvitedBy: String,
+  InviteCreator: String,
   InviteCode: String,
   Uses: Number
 });

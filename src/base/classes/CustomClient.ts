@@ -16,7 +16,7 @@ export default class CustomClient extends Client implements ICustomClient {
   commands: Collection<string, Command>;
   subCommands: Collection<string, SubCommand>;
   invitemanager: InviteManager
-  invites: Collection<string, Collection<string, Invite>>
+  invites: Collection<string, Collection<string, number>>
   constructor() {
     super({ intents: [Object.keys(GatewayIntentBits) as any], partials: [Object.keys(Partials) as any] });
     this.config = require(`${process.cwd()}/data/config.json`);
