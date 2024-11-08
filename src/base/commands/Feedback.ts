@@ -32,13 +32,14 @@ export default class Feedback extends Command {
         })
     }
     async Execute(interaction:ChatInputCommandInteraction){
+        await interaction.deferReply({ ephemeral: true });
         let feedbackObj = await feedbackSchema.findOne({GuildID: interaction.guild!.id})
         if(!feedbackObj) feedbackObj = await feedbackSchema.create({GuildID: interaction.guild?.id, FeedbackedMembers: []})
         const embed = new EmbedBuilder()
         .setTitle("User already feedbacked")
         .setDescription("You have already given a feedback.")
         .setColor(Colors.Error)
-        if(feedbackObj.FeedbackedMembers.includes(interaction.user.id)) return interaction.reply({embeds: [embed], ephemeral: true})
+        if(feedbackObj.FeedbackedMembers.includes(interaction.user.id)) return interaction.editReply({embeds: [embed]})
         const description = interaction.options.getString("message")
         const rating = interaction.options.getString("rating")
         let stars = ""
@@ -58,7 +59,7 @@ export default class Feedback extends Command {
         .setTitle("Feedback sent successfully")
         .setDescription("Your feedback has been sent successfully, thanks for the review.")
         .setColor(Colors.Success)
-        await interaction.reply({embeds: [successEmbed], ephemeral: true})
+        await interaction.editReply({embeds: [successEmbed]})
         feedbackObj.FeedbackedMembers.push(interaction.user.id)
         await feedbackSchema.updateOne({GuildID: interaction.guild!.id}, feedbackObj)
     }

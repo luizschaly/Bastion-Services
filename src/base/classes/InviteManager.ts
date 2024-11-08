@@ -1,10 +1,9 @@
 import CustomClient from "./CustomClient";
 import IInviteManager from "../interfaces/IInviteManager";
 import inviteSchema from "../schemas/invite";
-import { Collection, Invite } from "discord.js";
 
 const wait = require("timers/promises").setTimeout;
-export default class InviteManager implements IInviteManager {
+export default class InviteMan implements IInviteManager {
   client: CustomClient;
   constructor(client: CustomClient) {
     this.client = client;
@@ -20,12 +19,8 @@ export default class InviteManager implements IInviteManager {
           await inviteSchema.create({GuildID: guild.id, InviteCode: invite[1].code, InviteCreator: invite[1].inviterId, Uses: invite[1].uses})
         }
       }
-      this.client.invites.set(
-        guild.id,
-        new Collection(
-          firstInvites.map((invite) => [invite.code, invite.uses!])
-        )
-      );
+      
     });
+    console.log("Invites loaded")
   }
 }

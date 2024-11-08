@@ -3,6 +3,7 @@
     "ascii": "^1.0.0",
     "ascii-table": "^0.0.9",
     "discord-html-transcripts": "^3.2.0",
+    "discord-invite": "^4.0.8",
     "discord.js": "^14.15.3",
     "glob": "^11.0.0",
     "mongoose": "^8.7.0",
