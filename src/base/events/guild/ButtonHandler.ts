@@ -126,6 +126,16 @@ export default class ButtonHandler extends Event {
                 const userInv = invites?.filter((u) => u.inviter && u.inviter.id === interaction.user.id)
                 let i = 0
                 userInv?.forEach((inv) => i += inv.uses!)
+                if(interaction.message.embeds[0].title == "Ark: SE Dupe Method 1"){
+                    if (i < 5){
+                        const embed = new EmbedBuilder()
+                        .setTitle("Not enough invites")
+                        .setColor(Colors.Error)
+                        .setDescription(`You still need to invite ${5 - i} people to be able to get this free product, make sure they ${inlineCode("verify")} to the server or they will not count`)
+                        await interaction.reply({embeds: [embed], ephemeral: true})
+                        return
+                    }
+                }
                 if (i < 3){
                     const embed = new EmbedBuilder()
                     .setTitle("Not enough invites")
@@ -136,26 +146,35 @@ export default class ButtonHandler extends Event {
                 }
                 let productFile 
                 let tutorialString
+                let descriptionString
                 switch(interaction.message.embeds[0].title){
                     case "Rust Logitech Script": {
                         productFile = "https://www.mediafire.com/file/mrxnq9req5jg8bp/logitechScript.txt/file"
                         tutorialString = "Make a new script and change the sensitivity to your current ingame."
+                        descriptionString = `Click [here](${productFile}) to download \n\n ${tutorialString!}`
                         break
                     }
                     case "Valorant Triggerbot": {
                         tutorialString = ""
                         productFile = "https://www.mediafire.com/file/90blo9qp0l5bxpu/valorantTrigger.ahk/file"
+                        descriptionString = `Click [here](${productFile}) to download \n\n ${tutorialString!}`
                         break
                     }
                     case "Ark: SE/SA Desync": {
                         tutorialString = "Download [netlimiter](https://download.netlimiter.com/nl/netlimiter-5.3.6.0.exe) V5.3.6 and netlimiterpatch, setup netlimiter then open netlimiterpatch.exe, then when it asks for path choose where your Local Disk is, then complete the following steps: \n\nWindows key -> Type Services \nClick any of them once and type N \nFind the Netlimiter Service \nRight click -> Stop \nClose the services window \nGo to your NetlimitePatch installation \nCopy the Netlimiter.dll file \nGo to your default Netlimiter installation \nPaste the file \nOpen your NetlimiterPatch exe and start the service where it says"
                         productFile = "https://www.mediafire.com/file/zl7fwg1hjdodxjy/NetLimiterPatch.exe/file"
+                        descriptionString = `Click [here](${productFile}) to download \n\n ${tutorialString!}`
+                        break
+                    }
+                    case "Ark: SE Dupe Method 1": {
+                        tutorialString = "Download [process hacker](https://processhacker.sourceforge.io/)\nPlayer 1 : \ngrab items and travel to map 2 from map 1\nwhen on cloud suspend steam\nPlayer 2 : \ntry to enter map 2 and enter map 1\nwait on cloud\nPlayer 1 :\nspawn at map 1 and wait for player 2 to spawn at map 2\nafter player 2 spawns and stores items resume steam \nreopen ark and spawn at map 1\n  "
+                        descriptionString = `${tutorialString!}`
                         break
                     }
                 }
                 const embed = new EmbedBuilder()
                 .setTitle(interaction.message.embeds[0].title)
-                .setDescription(`Click [here](${productFile}) to download \n\n ${tutorialString!}`)
+                .setDescription(descriptionString!)
                 .setColor(Colors.Invisible)
                 await interaction.user.send({embeds: [embed]})
                 const embed2 = new EmbedBuilder()
