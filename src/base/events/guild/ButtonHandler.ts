@@ -124,12 +124,12 @@ export default class ButtonHandler extends Event {
                 break;
             }
             case "freeProduct": {
-                let i
+                let i = 0
                 const userInvites = await inviteSchema.find({ GuildID: interaction.guild!.id, InviteCreator: interaction.user.id })
+                console.log(userInvites)
                 for (const invite of userInvites) {
                     i =+ invite.RealUses!
                 }
-                if(typeof i == undefined) i = 0
 
                 if (interaction.message.embeds[0].title == "Ark: SE Dupe Method 1") {
                     if (i! < 5) {
