@@ -21,6 +21,7 @@ export default class ServerMessageStatusMessage extends Command {
        const embed = new EmbedBuilder()
        .setTitle("Product Status")
        .setColor(Colors.Invisible)
+       .setURL("https://bastionservices.wtf/status")
        .setDescription("Click on the title to view the status of all of our products, ensuring you dont buy anything thats currently detected/updating.")
         //@ts-ignore
        interaction.channel?.send({embeds: [embed]})
