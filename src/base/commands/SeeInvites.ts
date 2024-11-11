@@ -24,7 +24,7 @@ export default class CheckInvites extends Command {
             realInvNum =+ invite.RealUses! || 0
         }
         const embed = new EmbedBuilder()
-        .setTitle(`${interaction.user.username} Invites`)
+        .setTitle(`${interaction.user.displayName} Invites`)
         .setColor(Colors.Invisible)
         .addFields({name: `${Emojis.BlurpleDot}Valid Invites`, value: `${Emojis.BlurpleArrow} ${realInvNum}`})
         .setThumbnail(interaction.user.avatarURL())

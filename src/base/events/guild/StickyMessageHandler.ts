@@ -13,7 +13,7 @@ export default class StickyMessageHandler extends Event {
     }
     async Execute(message: Message): Promise<void> {
         if(message.channel.id !== "1299501751967420458") return 
-        if(message.author.bot) return
+        if(message.embeds[0].title == "How to get customer role?") return
 
         const messages = await message.channel.messages.fetch({ limit: 20 })
         const botMessage = messages.find((msg: Message) => msg.author.id === this.client.user!.id )
