@@ -12,8 +12,9 @@ import cartSchema from "../../schemas/cart";
 import TicketCategory from "../../enums/TicketCategory";
 import fs from "fs"
 import Channels from "../../enums/Channels";
+import inviteSchema from "../../schemas/invite";
 export default class ButtonHandler extends Event {
-    constructor(client: CustomClient){
+    constructor(client: CustomClient) {
         super(client, {
             name: Events.InteractionCreate,
             description: "Button handler event",
@@ -22,134 +23,138 @@ export default class ButtonHandler extends Event {
         })
     }
     async Execute(interaction: ButtonInteraction): Promise<void> {
-        if(!interaction.isButton()) return
-        switch(interaction.customId){
-            case "closeTicket":{
-                const ticketObj = await ticketSchema.findOneAndDelete({ChannelID: interaction.channel!.id})
-                
+        if (!interaction.isButton()) return
+        switch (interaction.customId) {
+            case "closeTicket": {
+                const ticketObj = await ticketSchema.findOneAndDelete({ ChannelID: interaction.channel!.id })
+
                 //@ts-ignore
                 const user = await interaction.guild?.members.fetch(ticketObj.UserID)
                 let transcriptFile
-                if(ticketObj?.TicketType == "media"){
+                if (ticketObj?.TicketType == "media") {
                     transcriptFile = await createTranscript(interaction.channel!, {
                         filename: `${user?.user.username}-media-ticket-transcript.html`,
                         poweredBy: false,
-                    }) 
-                    
-                } else {
-                transcriptFile = await createTranscript(interaction.channel!, {
-                    filename: `ticket-${ticketObj?.TicketNum}-transcript.html`,
-                    poweredBy: false,
+                    })
 
-                })}
+                } else {
+                    transcriptFile = await createTranscript(interaction.channel!, {
+                        filename: `ticket-${ticketObj?.TicketNum}-transcript.html`,
+                        poweredBy: false,
+
+                    })
+                }
                 const actionUser = interaction.user
                 const cacheChannel = this.client.channels.cache.get("1298384221072789535") as BaseGuildTextChannel
-                
+
                 const cacheEmbed = new EmbedBuilder()
-                .setColor(Colors.Neutral)
-                .setDescription(`<:blurpledot:1290116382813323276> Ticket closed by: ${inlineCode(actionUser.username)}\n<:blurpledot:1290116382813323276> Ticket opened by: ${inlineCode(user!.user.username)}\n<:blurpledot:1290116382813323276> Transcript:`)
-                if(ticketObj?.TicketType  == "media"){
+                    .setColor(Colors.Neutral)
+                    .setDescription(`<:blurpledot:1290116382813323276> Ticket closed by: ${inlineCode(actionUser.username)}\n<:blurpledot:1290116382813323276> Ticket opened by: ${inlineCode(user!.user.username)}\n<:blurpledot:1290116382813323276> Transcript:`)
+                if (ticketObj?.TicketType == "media") {
                     cacheEmbed.setTitle(`Media Ticket ${user?.user.username} Closed`)
                 } else {
                     cacheEmbed.setTitle(`Ticket-${(ticketObj?.TicketNum!).toString().padStart(4, '0')} Closed`)
                 }
-                const cacheMsg = await cacheChannel!.send({embeds: [cacheEmbed], files: [transcriptFile]})
+                const cacheMsg = await cacheChannel!.send({ embeds: [cacheEmbed], files: [transcriptFile] })
                 const openButton = new ButtonBuilder()
-                .setStyle(ButtonStyle.Link)
-                .setLabel("Open Transcript")
-                .setURL(`https://mahto.id/chat-exporter?url=${cacheMsg.attachments.first()?.url}`)
+                    .setStyle(ButtonStyle.Link)
+                    .setLabel("Open Transcript")
+                    .setURL(`https://mahto.id/chat-exporter?url=${cacheMsg.attachments.first()?.url}`)
                 cacheEmbed.setDescription(`<:blurpledot:1290116382813323276> Ticket closed by: ${inlineCode(actionUser.username)}\n<:blurpledot:1290116382813323276> Ticket opened by: ${inlineCode(user!.user.username)}\n<:blurpledot:1290116382813323276> Transcript: [transcript](${cacheMsg.attachments.first()?.url})`)
                 const row = new ActionRowBuilder().addComponents(openButton)
                 //@ts-ignore
-                await user?.send({embeds: [cacheEmbed], components: [row]})
+                await user?.send({ embeds: [cacheEmbed], components: [row] })
                 //@ts-ignore
-                await cacheMsg.edit({embeds: [cacheEmbed], components: [row]})
+                await cacheMsg.edit({ embeds: [cacheEmbed], components: [row] })
                 await interaction.channel?.delete()
                 break;
             }
             case "giveawayParticipate": {
                 const embedData = interaction.message.embeds[0].data
-                const giveawayObj = await giveawaySchema.findOne({GuildID: interaction.guild!.id, GiveawayID: embedData.footer!.text})
+                const giveawayObj = await giveawaySchema.findOne({ GuildID: interaction.guild!.id, GiveawayID: embedData.footer!.text })
                 const participantsAmount = embedData.fields![0].value.replace(Emojis.BlurpleArrow, "")
                 const newParticipantsAmount = parseInt(participantsAmount) + 1
                 const embed2 = new EmbedBuilder()
-                .setTitle("Unable to join giveaway")
-                .setDescription("You are already participating in this giveaway")
-                .setColor(Colors.Error)
+                    .setTitle("Unable to join giveaway")
+                    .setDescription("You are already participating in this giveaway")
+                    .setColor(Colors.Error)
                 //@ts-ignore
-                if(giveawayObj?.participants.includes(interaction.user.id)) return await interaction.reply({embeds: [embed2], ephemeral: true})
-                
-                embedData.fields![0].value=`${Emojis.BlurpleArrow} ${newParticipantsAmount}`
-                await interaction.message.edit({embeds: [embedData]})
+                if (giveawayObj?.participants.includes(interaction.user.id)) return await interaction.reply({ embeds: [embed2], ephemeral: true })
+
+                embedData.fields![0].value = `${Emojis.BlurpleArrow} ${newParticipantsAmount}`
+                await interaction.message.edit({ embeds: [embedData] })
                 const embed = new EmbedBuilder()
-                .setTitle("Giveaway entry successfull")
-                .setDescription("You have successfully joined the giveaway, make sure to complete all the requirements to be eligible to receive the prize.")
-                .setColor(Colors.Success)
+                    .setTitle("Giveaway entry successfull")
+                    .setDescription("You have successfully joined the giveaway, make sure to complete all the requirements to be eligible to receive the prize.")
+                    .setColor(Colors.Success)
                 //@ts-ignore
-                if(giveawayObj!.participants.length == 0){ 
-                        giveawayObj!.participants = [interaction.user.id]
-                    } else giveawayObj!.participants.push(interaction.user.id)
-                
-                await interaction.reply({embeds: [embed], ephemeral: true})
-                await giveawaySchema.updateOne({GuildID: interaction.guild!.id, GiveawayID: embedData.footer!.text}, giveawayObj!)
+                if (giveawayObj!.participants.length == 0) {
+                    giveawayObj!.participants = [interaction.user.id]
+                } else giveawayObj!.participants.push(interaction.user.id)
+
+                await interaction.reply({ embeds: [embed], ephemeral: true })
+                await giveawaySchema.updateOne({ GuildID: interaction.guild!.id, GiveawayID: embedData.footer!.text }, giveawayObj!)
                 break;
             }
             case "buyProduct": {
-                const productObj = await productSchema.findOne({GuildID:interaction.guild!.id, MessageID: interaction.message.id})
+                const productObj = await productSchema.findOne({ GuildID: interaction.guild!.id, MessageID: interaction.message.id })
                 const selectmenu = new StringSelectMenuBuilder()
-                .setMaxValues(1)
-                .setMinValues(1)
-                .setPlaceholder("Select plan")
-                .setCustomId(`selectProdOption${productObj?.ProductName}`)
-                
-                for(let i = 0; i < productObj?.ProductOptions.length; i++){
+                    .setMaxValues(1)
+                    .setMinValues(1)
+                    .setPlaceholder("Select plan")
+                    .setCustomId(`selectProdOption${productObj?.ProductName}`)
+
+                for (let i = 0; i < productObj?.ProductOptions.length; i++) {
                     selectmenu.addOptions(
                         new StringSelectMenuOptionBuilder()
-                        .setLabel(productObj?.ProductOptions[i].Name)
-                        .setValue(`${productObj?.ProductOptions[i].Name},${productObj?.ProductOptions[i].Price}`)
-                        .setDescription(`${productObj?.ProductOptions[i].Price}`)
-                        .setEmoji(Emojis.BlurpleDot)
+                            .setLabel(productObj?.ProductOptions[i].Name)
+                            .setValue(`${productObj?.ProductOptions[i].Name},${productObj?.ProductOptions[i].Price}`)
+                            .setDescription(`${productObj?.ProductOptions[i].Price}`)
+                            .setEmoji(Emojis.BlurpleDot)
                     )
                 }
                 const embed = new EmbedBuilder()
-                .setTitle("Select plan")
-                .setDescription("Select the desired plan of the product in the selectmenu under.")
-                .setColor(Colors.Invisible)
+                    .setTitle("Select plan")
+                    .setDescription("Select the desired plan of the product in the selectmenu under.")
+                    .setColor(Colors.Invisible)
                 const row = new ActionRowBuilder()
-                .setComponents(selectmenu)
+                    .setComponents(selectmenu)
                 //@ts-ignore
-                await interaction.reply({embeds: [embed], components: [row], ephemeral: true})
+                await interaction.reply({ embeds: [embed], components: [row], ephemeral: true })
                 break;
             }
             case "freeProduct": {
-                const invites = await interaction.guild?.invites.fetch()
-                const userInv = invites?.filter((u) => u.inviter && u.inviter.id === interaction.user.id)
-                let i = 0
-                userInv?.forEach((inv) => i += inv.uses!)
-                if(interaction.message.embeds[0].title == "Ark: SE Dupe Method 1"){
-                    if (i < 5){
+                let i
+                const userInvites = await inviteSchema.find({ GuildID: interaction.guild!.id, InviteCreator: interaction.user.id })
+                for (const invite of userInvites) {
+                    i =+ invite.RealUses!
+                }
+                if(typeof i == undefined) i = 0
+
+                if (interaction.message.embeds[0].title == "Ark: SE Dupe Method 1") {
+                    if (i! < 5) {
                         const embed = new EmbedBuilder()
-                        .setTitle("Not enough invites")
-                        .setColor(Colors.Error)
-                        .setDescription(`You still need to invite ${5 - i} people to be able to get this free product, make sure they ${inlineCode("verify")} to the server or they will not count`)
-                        await interaction.reply({embeds: [embed], ephemeral: true})
+                            .setTitle("Not enough invites")
+                            .setColor(Colors.Error)
+                            .setDescription(`You still need to invite ${5 - i!} people to be able to get this free product, make sure they ${inlineCode("verify")} to the server or they will not count`)
+                        await interaction.reply({ embeds: [embed], ephemeral: true })
                         return
                     }
                 } else {
-                    if (i < 3){
+                    if (i! < 3) {
                         const embed = new EmbedBuilder()
-                        .setTitle("Not enough invites")
-                        .setColor(Colors.Error)
-                        .setDescription(`You still need to invite ${3 - i} people to be able to get this free product, make sure they ${inlineCode("verify")} to the server or they will not count`)
-                        await interaction.reply({embeds: [embed], ephemeral: true})
+                            .setTitle("Not enough invites")
+                            .setColor(Colors.Error)
+                            .setDescription(`You still need to invite ${3 - i!} people to be able to get this free product, make sure they ${inlineCode("verify")} to the server or they will not count`)
+                        await interaction.reply({ embeds: [embed], ephemeral: true })
                         return
                     }
                 }
-                
-                let productFile 
+
+                let productFile
                 let tutorialString
                 let descriptionString
-                switch(interaction.message.embeds[0].title){
+                switch (interaction.message.embeds[0].title) {
                     case "Rust Logitech Script": {
                         productFile = "https://www.mediafire.com/file/mrxnq9req5jg8bp/logitechScript.txt/file"
                         tutorialString = "Make a new script and change the sensitivity to your current ingame."
@@ -175,22 +180,22 @@ export default class ButtonHandler extends Event {
                     }
                 }
                 const embed = new EmbedBuilder()
-                .setTitle(interaction.message.embeds[0].title)
-                .setDescription(descriptionString!)
-                .setColor(Colors.Invisible)
-                await interaction.user.send({embeds: [embed]})
+                    .setTitle(interaction.message.embeds[0].title)
+                    .setDescription(descriptionString!)
+                    .setColor(Colors.Invisible)
+                await interaction.user.send({ embeds: [embed] })
                 const embed2 = new EmbedBuilder()
-                .setTitle("Product sent")
-                .setDescription("Check your dms with the bot to use the free product.")
-                .setColor(Colors.Success)
+                    .setTitle("Product sent")
+                    .setDescription("Check your dms with the bot to use the free product.")
+                    .setColor(Colors.Success)
                 const embed3 = new EmbedBuilder()
-                .setColor(Colors.Invisible)
-                .setTitle(`${interaction.message.embeds[0].title} Claimed`)
-                .setDescription(`${interaction.user.displayName} has claimed a ${interaction.message.embeds[0].title}`)
-                await interaction.reply({embeds: [embed2], ephemeral: true})
+                    .setColor(Colors.Invisible)
+                    .setTitle(`${interaction.message.embeds[0].title} Claimed`)
+                    .setDescription(`${interaction.user.displayName} has claimed a ${interaction.message.embeds[0].title}`)
+                await interaction.reply({ embeds: [embed2], ephemeral: true })
                 const channel = await interaction.guild?.channels.fetch(Channels.GetFreeProductLogs)
                 //@ts-ignore
-                channel!.send({embeds: [embed3]})
+                channel!.send({ embeds: [embed3] })
 
             }
         }

@@ -16,6 +16,6 @@ export default class StickyMessageHandler extends Event {
   async Execute(invite: Invite): Promise<void> {
     //@ts-ignore
     this.client.invites!.get(invite.guild!.id).set(invite.code, invite.uses!);
-    inviteSchema.create({GuildID: invite.guild!.id, InviteCode: invite.code, Uses: invite.uses!, InviteCreator: invite.inviter!.id})
+    inviteSchema.create({GuildID: invite.guild!.id, InviteCode: invite.code, Uses: invite.uses!, InviteCreator: invite.inviter!.id, RealUses: 0, UsersInvited: []})
   }
 }

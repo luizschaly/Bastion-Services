@@ -16,7 +16,7 @@ export default class InviteMan implements IInviteManager {
       for(const invite of firstInvites){
         const inviteObj = await inviteSchema.findOne({GuildID: guild.id, InviteCode:invite[1].code})
         if(!inviteObj){
-          await inviteSchema.create({GuildID: guild.id, InviteCode: invite[1].code, InviteCreator: invite[1].inviterId, Uses: invite[1].uses})
+          await inviteSchema.create({GuildID: guild.id, InviteCode: invite[1].code, InviteCreator: invite[1].inviterId, Uses: invite[1].uses, RealUses: 0, UsersInvited: []})
         }
       }
       
