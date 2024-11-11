@@ -16,7 +16,7 @@ export default class StickyMessageHandler extends Event {
         if(message.author.bot) if(message.embeds[0].title == "How to get customer role?") return
 
         const messages = await message.channel.messages.fetch({ limit: 20 })
-        const botMessage = messages.find((msg: Message) => msg.embeds[0].title === "How to get customer role?" )
+        const botMessage = messages.find((msg: Message) => msg.author.id === this.client.user!.id && msg.embeds[0].title && msg.embeds[0].title == "How to get customer role?" )
         if(botMessage)botMessage?.delete()
         const embed = new EmbedBuilder()
         .setTitle("How to get customer role?")
