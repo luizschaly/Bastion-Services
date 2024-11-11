@@ -27,7 +27,7 @@ export default class CommandHandler extends Event {
         },
         {
             name: `${Emojis.BlurpleDot} Ends`,
-            value: `${Emojis.BlurpleArrow} <t:${Math.floor(Date.now() / 1000) + giveawayObj!.duration!}:R>`
+            value: `${Emojis.BlurpleArrow} <t:${Math.floor(Date.now() / 1000) + giveawayObj!.duration! / 1000}:R>`
         })
         .setColor(Colors.Invisible)
         .setFooter({text: giveawayObj!.GiveawayID!})

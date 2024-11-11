@@ -20,13 +20,13 @@ export default class GiveawayStart extends SubCommand {
         const prize = interaction.options.getString("prize")!
         const video = interaction.options.getString("video")!
         const setWinners = interaction.options.getBoolean("setwinners")!
-        const totalTime = duration * 60 
+        const totalTime = duration * 60 * 60 * 24
         const giveawayId = uuidv4()
         const giveawayObj: IGiveaway = {
             prize: prize,
             winnersAmount: winners,
             video: video,
-            duration: totalTime,
+            duration: totalTime * 1000,
             setWinners: setWinners,
             ChannelID: interaction.channel!.id,
             GuildID: interaction.guild!.id,
@@ -46,7 +46,7 @@ export default class GiveawayStart extends SubCommand {
         },
         {
             name: `${Emojis.BlurpleDot} Ends`,
-            value: `${Emojis.BlurpleArrow} <t:${Math.floor(Date.now() / 1000) + giveawayObj!.duration!}:R>`
+            value: `${Emojis.BlurpleArrow} <t:${Math.floor(Date.now() / 1000) + Math.floor(giveawayObj!.duration! / 1000)}:R>`
         })
         .setColor(Colors.Invisible)
         .setFooter({text: giveawayObj!.GiveawayID!})

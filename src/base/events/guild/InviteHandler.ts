@@ -15,6 +15,8 @@ export default class StickyMessageHandler extends Event {
     });
   }
   async Execute(member: GuildMember, inviter: User, invite: Invite): Promise<void> {
+    const role = member.guild.roles.cache.find(role => role.name === "Member");
+    member.roles.add(role!)
     const channel = await member.guild.channels.fetch(Channels.InvitesLogs)
     let inviteCode
     const embed = new EmbedBuilder()
@@ -46,11 +48,14 @@ export default class StickyMessageHandler extends Event {
       })
     } else {
 
-      let invNum = 0
+      let invNum 
       inviteCode = invite.code
       const userInvites = await inviteSchema.find({GuildID: member.guild.id, InviteCreator: inviter.id})
+      console.log(userInvites)
     for(const invite of userInvites){
+      console.log(invite.Uses)
       invNum =+ invite.Uses!
+      console.log("Invnum = " + invNum)
     }
     embed.addFields({
       name: `${Emojis.BlurpleDot} ${inviter.displayName} Invites`,
@@ -60,7 +65,7 @@ export default class StickyMessageHandler extends Event {
       name: `${Emojis.BlurpleDot}Invite Code`,
       value: `${Emojis.BlurpleArrow} ${inviteCode}`,
     },)
-    inviteSchema.updateOne({GuildID: member.guild.id, InviteCode: invite!.code}, {Uses: invNum + 1})
+    await inviteSchema.updateOne({GuildID: member.guild.id, InviteCode: invite!.code}, {Uses: invNum! + 1})
     }
     
     //@ts-ignore

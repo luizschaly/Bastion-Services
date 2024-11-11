@@ -5,6 +5,7 @@ import Category from "../enums/Category"
 import feedbackSchema from "../schemas/feedbacks"
 import Colors from "../enums/Colors"
 import Emojis from "../enums/Emojis"
+import Channels from "../enums/Channels"
 
 export default class Feedback extends Command {
     constructor(client: CustomClient){
@@ -52,7 +53,7 @@ export default class Feedback extends Command {
         .setColor(Colors.Invisible)
         .addFields({name: `${Emojis.BlurpleDot} Rating`, value: `${Emojis.BlurpleArrow} ${stars}`})
         .setAuthor({name: interaction.user.username, iconURL: interaction.user.avatarURL()! })
-        const channel = await interaction.guild!.channels.fetch(this.client.config.logChannels.feedback)
+        const channel = await interaction.guild!.channels.fetch(Channels.FeedbackLogs)
         //@ts-ignore
         channel!.send({embeds: [feedbackEmbed]})
         const successEmbed = new EmbedBuilder()
