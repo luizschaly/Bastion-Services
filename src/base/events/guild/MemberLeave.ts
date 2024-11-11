@@ -25,6 +25,7 @@ export default class MemberLeaveHandler extends Event {
                     inviteused?.UsersInvited.splice(index, 1);
                 }
             }
+            inviteused!.RealUses!--
             await inviteSchema.updateOne({InviteCode: invite.code, GuildID: member.guild.id}, inviteused!)
         
         }
