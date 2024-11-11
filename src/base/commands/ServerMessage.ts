@@ -35,6 +35,12 @@ export default class Ticket extends Command {
                     description: "Sends the get loader message.",
                     type: ApplicationCommandOptionType.Subcommand,
                     options: []
+                },
+                {
+                    name: "statusmessage",
+                    description: "Sends the status message.",
+                    type: ApplicationCommandOptionType.Subcommand,
+                    options: []
                 }
             ]
         })
