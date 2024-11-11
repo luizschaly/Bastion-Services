@@ -135,7 +135,7 @@ export default class ButtonHandler extends Event {
                         await interaction.reply({embeds: [embed], ephemeral: true})
                         return
                     }
-                }  else {
+                } else {
                     if (i < 3){
                         const embed = new EmbedBuilder()
                         .setTitle("Not enough invites")
