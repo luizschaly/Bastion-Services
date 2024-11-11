@@ -135,15 +135,17 @@ export default class ButtonHandler extends Event {
                         await interaction.reply({embeds: [embed], ephemeral: true})
                         return
                     }
+                }  else {
+                    if (i < 3){
+                        const embed = new EmbedBuilder()
+                        .setTitle("Not enough invites")
+                        .setColor(Colors.Error)
+                        .setDescription(`You still need to invite ${3 - i} people to be able to get this free product, make sure they ${inlineCode("verify")} to the server or they will not count`)
+                        await interaction.reply({embeds: [embed], ephemeral: true})
+                        return
+                    }
                 }
-                if (i < 3){
-                    const embed = new EmbedBuilder()
-                    .setTitle("Not enough invites")
-                    .setColor(Colors.Error)
-                    .setDescription(`You still need to invite ${3 - i} people to be able to get this free product, make sure they ${inlineCode("verify")} to the server or they will not count`)
-                    await interaction.reply({embeds: [embed], ephemeral: true})
-                    return
-                }
+                
                 let productFile 
                 let tutorialString
                 let descriptionString
