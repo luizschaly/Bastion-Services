@@ -18,7 +18,8 @@ export default class ProductOptionAdd extends SubCommand {
         const channel = await interaction.guild?.channels.fetch(productObj?.ChannelID!)
         const name = interaction.options.getString("name")
         const value = interaction.options.getNumber("value")
-        const api = interaction.options.getString("api")
+        let api = interaction.options.getString("api")
+        if(!api) api = "None"
         //@ts-ignore
         const message: Message = await channel!.messages.fetch(productObj?.MessageID)
         const embed = EmbedBuilder.from(message.embeds[0]).addFields({name: `${Emojis.BlurpleDot}${name}`, value: `${Emojis.BlurpleArrow} ${value}${Emojis.BlurpleDollar}`})

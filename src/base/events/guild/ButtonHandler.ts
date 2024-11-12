@@ -196,7 +196,17 @@ export default class ButtonHandler extends Event {
                 const channel = await interaction.guild?.channels.fetch(Channels.GetFreeProductLogs)
                 //@ts-ignore
                 channel!.send({ embeds: [embed3] })
-
+                break
+            }
+            case "removeFCart": {
+                const productEmbed = interaction.message.embeds[0]
+                const productOptionPrice = productEmbed.fields[0].value.replace(Emojis.BlurpleArrow, "").replace(Emojis.BlurpleDollar, "")
+                const cartObj = await cartSchema.findOne({GuildID: interaction.guild!.id, UserID: interaction.user.id})
+                //@ts-ignore
+                cartObj!.Products! = cartObj!.Products.filter(item => item.Name !== productEmbed.title);
+                cartObj!.TotalPrice =- parseInt(productOptionPrice)
+                //@ts-ignore
+                await cartObj?.updateOne({GuildID: interaction.guild!.id, UserID: interaction.user.id}, cartObj)
             }
         }
     }
