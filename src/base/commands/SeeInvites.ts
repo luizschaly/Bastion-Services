@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ChatInputCommandInteraction, EmbedBuilder, ModalActionRowComponentBuilder, ModalBuilder, PermissionsBitField, TextInputBuilder, TextInputStyle } from "discord.js"
+import { ActionRowBuilder, ApplicationCommandOptionType, ChatInputCommandInteraction, EmbedBuilder, ModalActionRowComponentBuilder, ModalBuilder, PermissionsBitField, TextInputBuilder, TextInputStyle } from "discord.js"
 import Command from "../classes/Command"
 import CustomClient from "../classes/CustomClient"
 import Category from "../enums/Category"
@@ -13,21 +13,28 @@ export default class CheckInvites extends Command {
             category: Category.Utilities,
             default_member_permissions: PermissionsBitField.Flags.UseApplicationCommands,
             dm_permission: false,
-            options: []
+            options: [{
+                name: "user",
+                description: "User to check the invites ",
+                type: ApplicationCommandOptionType.User,
+                required: false
+              },]
         })
     
     } 
     async Execute(interaction: ChatInputCommandInteraction) {
-        const inviteobj = await inviteSchema.find({GuildID: interaction.guild!.id, InviteCreator: interaction.user.id})
+        let user = interaction.options.getUser("user")
+        if(!user) user = interaction.user
+        const inviteobj = await inviteSchema.find({GuildID: interaction.guild!.id, InviteCreator: user.id})
         let realInvNum = 0
         for(const invite of inviteobj){
             realInvNum =+ invite.RealUses! || 0
         }
         const embed = new EmbedBuilder()
-        .setTitle(`${interaction.user.displayName} Invites`)
+        .setTitle(`${user.displayName} Invites`)
         .setColor(Colors.Invisible)
         .addFields({name: `${Emojis.BlurpleDot}Valid Invites`, value: `${Emojis.BlurpleArrow} ${realInvNum}`})
-        .setThumbnail(interaction.user.avatarURL())
+        .setThumbnail(user.avatarURL())
         await interaction.reply({embeds: [embed]})
     }
 }
