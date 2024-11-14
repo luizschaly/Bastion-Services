@@ -3,7 +3,8 @@ enum TicketCategoryImage {
     "paypal" = "https://i.imgur.com/1sfuu6h.png",
     "buyingissue" = "https://i.imgur.com/X7OHrYu.png",
     "setupissue" = "https://i.imgur.com/X7OHrYu.png",
-    "giveawayclaim" = "https://i.imgur.com/GfEwseU.png"
+    "giveawayclaim" = "https://i.imgur.com/GfEwseU.png",
+    "purchase" = "https://i.imgur.com/6Jd5iEW.png"
 }
 
 export default TicketCategoryImage

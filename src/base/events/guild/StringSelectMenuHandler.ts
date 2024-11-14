@@ -228,7 +228,7 @@ export default class SelectMenuHandler extends Event {
       //@ts-ignore
       await userCartChannel.send({embeds: [productEmbed], components: [row]})
       const apiIndex = productObj?.ProductOptions.findIndex((obj: IProductOption) => obj.Name == plan)
-      usercart.Products.push({Name: productObj!.ProductName!, Api: productObj?.ProductOptions[apiIndex].API})
+      usercart.Products.push({Name: productObj!.ProductName!, Api: productObj?.ProductOptions[apiIndex].API, PlanOption: plan, PlanOptionPrice: price})
       usercart.TotalPrice! += parseInt(price)
       const responseEmbed = new EmbedBuilder()
       .setTitle("Product Added")

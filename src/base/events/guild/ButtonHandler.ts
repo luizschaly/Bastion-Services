@@ -206,8 +206,25 @@ export default class ButtonHandler extends Event {
                 cartObj!.Products! = cartObj!.Products.filter(item => item.Name !== productEmbed.title);
                 cartObj!.TotalPrice =- parseInt(productOptionPrice)
                 //@ts-ignore
-                await cartObj?.updateOne({GuildID: interaction.guild!.id, UserID: interaction.user.id}, cartObj)
+                await cartSchema?.updateOne({GuildID: interaction.guild!.id, UserID: interaction.user.id}, cartObj)
+                interaction.message.delete()
+                break
             }
+            case "cartCheckout": {
+                const userCartObj = await cartSchema.findOne({GuildID: interaction.guild!.id, UserID: interaction.user.id})
+                let descString= ""
+                for(const product of userCartObj?.Products!){
+                    if(product.Api !== "None"){
+                        return
+                    }
+                    descString += `${Emojis.BlurpleDot}${product.Name} ${product.PlanOption} - ${product.PlanOptionPrice}`
+                }
+                //@ts-ignore
+                await cartSchema?.deleteOne({GuildID: interaction.guild!.id, UserID: interaction.user.id})
+                interaction.channel!.delete()
+                break
+            }
+
         }
     }
 }
