@@ -14,6 +14,8 @@ export default class MemberLeaveHandler extends Event {
         })
     }
     async Execute(member: GuildMember, inviter: User, invite: Invite): Promise<void> {
+        //@ts-ignore
+        if(inviter == member.guild.vanityURLCode) return
         const role = member.guild.roles.cache.find(role => role.name === "Verified")
         if (member.roles.cache.has(role!.id)) {
             const inviteused = await inviteSchema.findOne({ InviteCode: invite.code, GuildID: member.guild.id })

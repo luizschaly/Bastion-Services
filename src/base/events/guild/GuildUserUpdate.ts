@@ -22,6 +22,7 @@ export default class StickyMessageHandler extends Event {
                 GuildID: oldMember.guild.id,
                 UsersInvited: { $in: [newMember.id] }
               });
+              if(!userInviteUsed) return
               if(typeof userInviteUsed?.RealUses !== "number"){
                 userInviteUsed!.RealUses = 0
               }

@@ -27,7 +27,7 @@ export default class ProductOptionAdd extends SubCommand {
         if(!productObj?.ProductOptions){
             productObj!.ProductOptions = [{Name: name, Price: value, API: api}]
         } else productObj?.ProductOptions.push({Name: name, Price: value, API: api})
-        await productSchema.updateOne({GuildID:interaction.guild!.id}, productObj!)
+        await productSchema.updateOne({GuildID:interaction.guild!.id, ProductName: product}, productObj!)
         const embed2 = new EmbedBuilder()
         .setTitle("Option added successfully")
         .setDescription("Your product option has been added successfully")

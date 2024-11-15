@@ -68,7 +68,7 @@ export default class Product extends Command {
               name: "api",
               description: "Api for the option",
               type: ApplicationCommandOptionType.String,
-              required: true
+              required: false
             },
           ]
         },
