@@ -1,4 +1,4 @@
-import { ActionRow, ActionRowBuilder, BaseGuildTextChannel, ButtonBuilder, ButtonInteraction, ButtonStyle, ChannelType, EmbedBuilder, Events, GuildTextBasedChannel, inlineCode, PermissionFlagsBits, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
+import { ActionRow, ActionRowBuilder, BaseGuildTextChannel, ButtonBuilder, ButtonInteraction, ButtonStyle, ChannelType, EmbedBuilder, Events, GuildScheduledEvent, GuildTextBasedChannel, inlineCode, PermissionFlagsBits, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
 import { createTranscript } from "discord-html-transcripts";
 import CustomClient from "../../classes/CustomClient";
 import ticketSchema from "../../schemas/ticket"
@@ -13,6 +13,7 @@ import TicketCategory from "../../enums/TicketCategory";
 import fs from "fs"
 import Channels from "../../enums/Channels";
 import inviteSchema from "../../schemas/invite";
+import guildSchema from "../../schemas/server";
 export default class ButtonHandler extends Event {
     constructor(client: CustomClient) {
         super(client, {
@@ -109,13 +110,12 @@ export default class ButtonHandler extends Event {
                         new StringSelectMenuOptionBuilder()
                             .setLabel(productObj?.ProductOptions[i].Name)
                             .setValue(`${productObj?.ProductOptions[i].Name},${productObj?.ProductOptions[i].Price}`)
-                            .setDescription(`${productObj?.ProductOptions[i].Price}`)
-                            .setEmoji(Emojis.BlurpleDot)
+                            .setDescription(`$ ${productObj?.ProductOptions[i].Price},00`)
+                            .setEmoji("📦")
                     )
                 }
                 const embed = new EmbedBuilder()
-                    .setTitle("Select plan")
-                    .setDescription("Select the desired plan of the product in the selectmenu under.")
+                    .setDescription(`# ${Emojis.BuyCart} Select plan`)
                     .setColor(Colors.Invisible)
                 const row = new ActionRowBuilder()
                     .setComponents(selectmenu)
@@ -128,7 +128,7 @@ export default class ButtonHandler extends Event {
                 const userInvites = await inviteSchema.find({ GuildID: interaction.guild!.id, InviteCreator: interaction.user.id })
                 console.log(userInvites)
                 for (const invite of userInvites) {
-                    i =+ invite.RealUses!
+                    i = + invite.RealUses!
                 }
 
                 if (interaction.message.embeds[0].title == "Ark: SE Dupe Method 1") {
@@ -200,28 +200,75 @@ export default class ButtonHandler extends Event {
             }
             case "removeFCart": {
                 const productEmbed = interaction.message.embeds[0]
+                interaction.message.delete()
                 const productOptionPrice = productEmbed.fields[0].value.replace(Emojis.BlurpleArrow, "").replace(Emojis.BlurpleDollar, "")
-                const cartObj = await cartSchema.findOne({GuildID: interaction.guild!.id, UserID: interaction.user.id})
+                const cartObj = await cartSchema.findOne({ GuildID: interaction.guild!.id, UserID: interaction.user.id })
                 //@ts-ignore
                 cartObj!.Products! = cartObj!.Products.filter(item => item.Name !== productEmbed.title);
-                cartObj!.TotalPrice =- parseInt(productOptionPrice)
+                cartObj!.TotalPrice = - parseInt(productOptionPrice)
                 //@ts-ignore
-                await cartSchema?.updateOne({GuildID: interaction.guild!.id, UserID: interaction.user.id}, cartObj)
-                interaction.message.delete()
+                await cartSchema?.updateOne({ GuildID: interaction.guild!.id, UserID: interaction.user.id }, cartObj)
                 break
             }
             case "cartCheckout": {
-                const userCartObj = await cartSchema.findOne({GuildID: interaction.guild!.id, UserID: interaction.user.id})
-                let descString= ""
-                for(const product of userCartObj?.Products!){
-                    if(product.Api !== "None"){
+                const userCartObj = await cartSchema.findOne({ GuildID: interaction.guild!.id, UserID: interaction.user.id })
+                let descString = ""
+                for (const product of userCartObj?.Products!) {
+                    if (product.Api !== "None") {
                         return
                     }
-                    descString += `${Emojis.BlurpleDot}${product.Name} ${product.PlanOption} - ${product.PlanOptionPrice}`
+                    descString += `> ${product.Name} ${product.PlanOption} - ${product.PlanOptionPrice} ${Emojis.BlurpleDollar}\n`
+                }
+                const embed = new EmbedBuilder()
+                    .setDescription(`# ${interaction.user.displayName} Cart \n> **Final Price:** \n ${Emojis.BlurpleArrow} ${userCartObj?.TotalPrice}${Emojis.BlurpleDollar} \n\n${Emojis.BlurpleDot}**Products:** \n${descString}`)
+                    .setColor(Colors.Invisible)
+                const guildObj = await guildSchema.findOne({ GuildID: interaction.guild!.id })
+                const newTicketNum = parseInt(guildObj!.LastTicketNum!) + 1
+                const permissions = [
+                    {
+                        id: interaction.user.id,
+                        allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages],
+                    },
+                    {
+                        id: "1290345221325852714",
+                        deny: [PermissionFlagsBits.ViewChannel],
+                    },
+                    {
+                        id: interaction.guild!.roles.everyone.id,
+                        deny: [PermissionFlagsBits.ViewChannel],
+                    },
+                ]
+                for (const key in Roles) {
+                    //@ts-ignore
+                    permissions.push({ id: Roles[key], allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages] })
                 }
                 //@ts-ignore
-                await cartSchema?.deleteOne({GuildID: interaction.guild!.id, UserID: interaction.user.id})
+                const ticketCategoryID = TicketCategory["purchase"] as string;
+                const ticketChannel = await interaction.guild?.channels.create({
+                    parent: ticketCategoryID,
+                    name: `ticket ${(newTicketNum).toString().padStart(4, '0')}`,
+                    type: ChannelType.GuildText,
+                    permissionOverwrites: permissions,
+                });
+                const ticketConfigEmbed = new EmbedBuilder()
+                    .setColor(Colors.Invisible)
+                    .setDescription(`# **Ticket-${newTicketNum.toString().padStart(4, '0')}**\n`+"<:blurpledot:1290116382813323276> Staff will be with you shortly\n<:blurpledot:1290116382813323276> To close this ticket click on the <:blurplelock:1298368181169160194> button")
+                const button2 = new ButtonBuilder()
+                    .setLabel("Close ticket")
+                    .setCustomId("closeTicket")
+                    .setEmoji("<:blurplelock:1298368181169160194>")
+                    .setStyle(ButtonStyle.Secondary)
+                
+                const row2 = new ActionRowBuilder().addComponents(button2)
+                //@ts-ignore
+                ticketChannel!.send({embeds: [ticketConfigEmbed], components: [row2]})
+                //@ts-ignore
+                ticketChannel!.send({content: `<@${interaction.user.id}> <@&${Roles.Founder}> <@&${Roles.Support}> <@&${Roles.Admin}>`, embeds: [embed]})
+                //@ts-ignore
                 interaction.channel!.delete()
+                await guildSchema.findOneAndUpdate({LastTicketNum: newTicketNum})
+                await ticketSchema.create({TicketType: "purchase", GuildID: interaction.guild?.id, UserID: interaction.user.id, TicketNum: newTicketNum, ChannelID: ticketChannel!.id })
+                await cartSchema?.deleteOne({ GuildID: interaction.guild!.id, UserID: interaction.user.id })
                 break
             }
 

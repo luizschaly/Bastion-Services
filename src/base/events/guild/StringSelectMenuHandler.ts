@@ -183,8 +183,7 @@ export default class SelectMenuHandler extends Event {
         value: `${Emojis.BlurpleArrow}${price}${Emojis.BlurpleDollar}`
       })
       const initialembed = new EmbedBuilder()
-      .setTitle(`${interaction.user.username} Cart`)
-      .setDescription("The products in your cart will be displayed in this channel")
+      .setDescription(`# **${interaction.user.username} Cart** \nThe products in your cart will be displayed in this channel`)
       .setColor(Colors.Invisible)
       const userCartCategory = await interaction.guild?.channels.fetch(TicketCategory.cart)
       let usercart = await cartSchema.findOne({GuildID: interaction.guild!.id, UserID: interaction.user.id})
@@ -217,7 +216,7 @@ export default class SelectMenuHandler extends Event {
           .setComponents(button)
           //@ts-ignore
           userCartChannel.send({embeds: [initialembed], components: [row]})
-          usercart = await cartSchema.create({GuildID: interaction.guild!.id, UserID: interaction.user.id, ChannelID: userCartChannel!.id})
+          usercart = await cartSchema.create({GuildID: interaction.guild!.id, UserID: interaction.user.id, ChannelID: userCartChannel!.id, TotalPrice: 0})
       }
       const button = new ButtonBuilder()
       .setLabel("Remove")
@@ -231,8 +230,7 @@ export default class SelectMenuHandler extends Event {
       usercart.Products.push({Name: productObj!.ProductName!, Api: productObj?.ProductOptions[apiIndex].API, PlanOption: plan, PlanOptionPrice: price})
       usercart.TotalPrice! = parseInt(price) + usercart!.TotalPrice!
       const responseEmbed = new EmbedBuilder()
-      .setTitle("Product Added")
-      .setDescription("The product has been added to your cart successfully")
+      .setDescription(`# ${Emojis.Confirm} Product Added`) 
       .setColor(Colors.Success)
       const linkbutton = new ButtonBuilder()
       .setLabel("Go to cart")
@@ -240,7 +238,7 @@ export default class SelectMenuHandler extends Event {
       .setURL(userCartChannel!.url)
       const linkRow = new ActionRowBuilder().addComponents(linkbutton)
       //@ts-ignore
-      await interaction.reply({embeds: [responseEmbed],components: [linkRow], ephemeral: true})
+      interaction.update({embeds: [responseEmbed],components: [linkRow], ephemeral: true})
       await cartSchema.updateOne({GuildID: interaction.guild?.id, UserID: interaction.user.id}, usercart)
     }
   }
