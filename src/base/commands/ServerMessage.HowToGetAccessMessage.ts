@@ -4,16 +4,12 @@ import CustomClient from "../classes/CustomClient"
 import Category from "../enums/Category"
 import Emojis from "../enums/Emojis"
 import Colors from "../enums/Colors"
+import SubCommand from "../classes/SubCommand"
 
-export default class ServerMessageHowToGetAccessMessage extends Command {
+export default class ServerMessageHowToGetAccessMessage extends SubCommand {
     constructor(client: CustomClient){
         super(client, {
-            name: "servermessage.howtogetaccessmessage",
-            description: "Sends the how to get access message.",
-            category: Category.SellAuth,
-            default_member_permissions: PermissionsBitField.Flags.UseApplicationCommands,
-            dm_permission: false,
-            options: []
+            name: "servermessage.howtogetaccessmessage"
         })
     
     } 

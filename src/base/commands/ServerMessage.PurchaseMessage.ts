@@ -4,16 +4,12 @@ import CustomClient from "../classes/CustomClient"
 import Category from "../enums/Category"
 import Emojis from "../enums/Emojis"
 import Colors from "../enums/Colors"
+import SubCommand from "../classes/SubCommand"
 
-export default class ServerMessagePurchaseMessage extends Command {
+export default class ServerMessagePurchaseMessage extends SubCommand {
     constructor(client: CustomClient){
         super(client, {
-            name: "servermessage.purchasemessage",
-            description: "Sends the purchase message.",
-            category: Category.SellAuth,
-            default_member_permissions: PermissionsBitField.Flags.Administrator,
-            dm_permission: false,
-            options: []
+            name: "servermessage.purchasemessage"
         })
     
     } 

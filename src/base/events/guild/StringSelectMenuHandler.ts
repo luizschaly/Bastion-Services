@@ -189,7 +189,7 @@ export default class SelectMenuHandler extends Event {
       const userCartCategory = await interaction.guild?.channels.fetch(TicketCategory.cart)
       let usercart = await cartSchema.findOne({GuildID: interaction.guild!.id, UserID: interaction.user.id})
       //@ts-ignore
-      let userCartChannel = interaction.guild?.channels.cache.get((channel) => channel.parentId === userCartCategory.id && channel.name === interaction.user.username)
+      let userCartChannel = await interaction.guild?.channels.fetch(usercart?.ChannelID)
       if(!usercart){ 
           //@ts-ignore
           userCartChannel = await interaction.guild?.channels.create({
@@ -217,7 +217,7 @@ export default class SelectMenuHandler extends Event {
           .setComponents(button)
           //@ts-ignore
           userCartChannel.send({embeds: [initialembed], components: [row]})
-          usercart = await cartSchema.create({GuildID: interaction.guild!.id, UserID: interaction.user.id})
+          usercart = await cartSchema.create({GuildID: interaction.guild!.id, UserID: interaction.user.id, ChannelID: userCartChannel!.id})
       }
       const button = new ButtonBuilder()
       .setLabel("Remove")
@@ -229,7 +229,7 @@ export default class SelectMenuHandler extends Event {
       await userCartChannel.send({embeds: [productEmbed], components: [row]})
       const apiIndex = productObj?.ProductOptions.findIndex((obj: IProductOption) => obj.Name == plan)
       usercart.Products.push({Name: productObj!.ProductName!, Api: productObj?.ProductOptions[apiIndex].API, PlanOption: plan, PlanOptionPrice: price})
-      usercart.TotalPrice! += parseInt(price)
+      usercart.TotalPrice! = parseInt(price) + usercart!.TotalPrice!
       const responseEmbed = new EmbedBuilder()
       .setTitle("Product Added")
       .setDescription("The product has been added to your cart successfully")

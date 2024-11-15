@@ -5,7 +5,7 @@ enum TicketCategory {
     "setupissue" = "1297759362571436135",
     "giveawayclaim" = "1299580812080971817",
     "cart" = "1302018256458223666",
-    "purchase" = ""
+    "purchase" = "1306811128436756571"
 }
 
 export default TicketCategory

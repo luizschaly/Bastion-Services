@@ -42,15 +42,12 @@ export default class CustomClient extends Client implements ICustomClient {
       .catch((err) => console.log(err));
     this.giveawayManager.LoadGiveaways()
     this.invman.LoadInvites()
-    process.on("unhandledRejection", async (error: Error) => {
+    process.on("uncaughtException", async (error: Error) => {
       const channel = await this.channels.fetch(Channels.ErrorChannel)
       const embed = new EmbedBuilder()
         .setTitle("New Bot Error")
         .setColor(Colors.Error)
-        .addFields({
-          name: `${Emojis.BlurpleDot}Error Stack`,
-          value: "```\n" + error.stack || error.message || error + "```"
-        })
+        .setDescription("```\n" + error.stack || error.message || error + "```")
         //@ts-ignore
       channel.send({embeds: [embed]})
     })
@@ -59,10 +56,7 @@ export default class CustomClient extends Client implements ICustomClient {
       const embed = new EmbedBuilder()
         .setTitle("New Bot Error")
         .setColor(Colors.Error)
-        .addFields({
-          name: `${Emojis.BlurpleDot} Error Stack`,
-          value: "```\n" + error.stack || error.message || error + "```"
-        })
+        .setDescription("```\n" + error.stack || error.message || error + "```")
       //@ts-ignore
       channel.send({embeds: [embed]})
     })

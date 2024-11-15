@@ -5,16 +5,12 @@ import Category from "../enums/Category"
 import Emojis from "../enums/Emojis"
 import Colors from "../enums/Colors"
 import Loaders from "../enums/Loaders"
+import SubCommand from "../classes/SubCommand"
 
-export default class ServerMessageLoadersMessage extends Command {
+export default class ServerMessageLoadersMessage extends SubCommand {
     constructor(client: CustomClient){
         super(client, {
-            name: "servermessage.loadersmessage",
-            description: "Sends the get loaders message.",
-            category: Category.SellAuth,
-            default_member_permissions: PermissionsBitField.Flags.Administrator,
-            dm_permission: false,
-            options: []
+            name: "servermessage.loadersmessage"
         })
     
     } 

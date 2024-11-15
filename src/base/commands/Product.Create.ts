@@ -14,7 +14,7 @@ export default class ProductCreate extends SubCommand {
 
     async Execute(interaction: ChatInputCommandInteraction): Promise<void> {
         const name = interaction.options.getString("name")
-        const description = interaction.options.getString("description")!.replace("_", "\n")
+        const description = interaction.options.getString("description")!.replace(/_/g, "\n")
         const statusImage = interaction.options.getString("status")
         const productImage = interaction.options.getString("image")
         const embed = new EmbedBuilder()
