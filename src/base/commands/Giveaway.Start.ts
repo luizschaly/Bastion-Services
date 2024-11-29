@@ -26,7 +26,7 @@ export default class GiveawayStart extends SubCommand {
             prize: prize,
             winnersAmount: winners,
             video: video,
-            duration: totalTime * 1000,
+            duration: Date.now() + totalTime * 1000,
             setWinners: setWinners,
             ChannelID: interaction.channel!.id,
             GuildID: interaction.guild!.id,

@@ -42,7 +42,7 @@ export default class GiveawayManager implements IGiveawayManager {
             await message.reply({content: winnersText ,embeds: [embed]})
             await giveawaySchema.deleteOne({GiveawayID: giveAwayUpdated!.GiveawayID})
         }
-        ,giveaway.duration)
+        , giveaway.duration - Date.now())
         }
         console.log("Giveaways loaded")
     }
