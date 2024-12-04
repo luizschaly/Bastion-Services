@@ -15,7 +15,7 @@ export default class ProductEditProperty extends SubCommand {
     async Execute(interaction: ChatInputCommandInteraction): Promise<void> {
         const product = interaction.options.getString("product")
         const property = interaction.options.getString("property")
-        const propertyData = interaction.options.getString("propertyData")
+        const propertyData = interaction.options.getString("propertydata")
         const productObj = await productSchema.findOne({GuildID: interaction.guild!.id, ProductName: product})
         const channel = await interaction.guild?.channels.fetch(productObj?.ChannelID!)
         //@ts-ignore
