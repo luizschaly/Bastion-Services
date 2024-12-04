@@ -16,6 +16,45 @@ export default class Product extends Command {
       dm_permission: false,
       options: [
         {
+          name: "editProperty",
+          description: "Edits a property of a product",
+          type: ApplicationCommandOptionType.Subcommand,
+          options: [
+            {
+              name: "product",
+              description: "Name of the product",
+              type: ApplicationCommandOptionType.String,
+              required: true
+            },
+            {
+              name: "property",
+              description: "Property that is going to be edited",
+              type: ApplicationCommandOptionType.String,
+              choices: [
+                {
+                  name: "Image",
+                  value: "image"
+                },
+                {
+                  name: "Description",
+                  value: "description"
+                },
+                {
+                  name: "Video",
+                  value: "video"
+                },
+              ],
+              required: true
+            },
+            {
+              name: "propertydata",
+              description: "Data to substitute the new property",
+              type: ApplicationCommandOptionType.String,
+              required: true
+            }
+          ]
+        },
+        {
           name: "createfree",
           description: "Creates a free product",
           type: ApplicationCommandOptionType.Subcommand,
@@ -40,7 +79,7 @@ export default class Product extends Command {
             },
           ]
         },
-        
+
         {
           name: "optionadd",
           description: "Adds an option to a product",
@@ -100,11 +139,11 @@ export default class Product extends Command {
               description: "Initial status of your new product",
               type: ApplicationCommandOptionType.String,
               choices: [
-                {name:"Out of Stock" ,value: "https://i.imgur.com/jj3hoXW.png"},
-                {name:"Undetected" ,value: "https://i.imgur.com/ofbB3aN.png"},
-                {name:"Detected" ,value: "https://i.imgur.com/feOLKNP.png"},
-                {name:"Updating" ,value: "https://i.imgur.com/PnWOzDG.png"},
-                {name:"Soon" ,value: "https://i.imgur.com/K5jvTRy.png"},
+                { name: "Out of Stock", value: "https://i.imgur.com/jj3hoXW.png" },
+                { name: "Undetected", value: "https://i.imgur.com/ofbB3aN.png" },
+                { name: "Detected", value: "https://i.imgur.com/feOLKNP.png" },
+                { name: "Updating", value: "https://i.imgur.com/PnWOzDG.png" },
+                { name: "Soon", value: "https://i.imgur.com/K5jvTRy.png" },
               ],
               required: true
             },
