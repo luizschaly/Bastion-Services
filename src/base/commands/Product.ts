@@ -16,7 +16,7 @@ export default class Product extends Command {
       dm_permission: false,
       options: [
         {
-          name: "editProperty",
+          name: "editproperty",
           description: "Edits a property of a product",
           type: ApplicationCommandOptionType.Subcommand,
           options: [
