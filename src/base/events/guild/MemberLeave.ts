@@ -60,7 +60,7 @@ export default class MemberLeaveHandler extends Event {
                 await inviteSchema.updateOne({ InviteCode: invite.code, GuildID: member.guild.id }, inviteused!)
             }
             embed
-            .setThumbnail(inviter.avatarURL!())
+            .setThumbnail(inviter.displayAvatarURL!())
             .addFields(
                 {
                     name: `${Emojis.BlurpleDot} ${inviter.displayName} Real Invites`,
