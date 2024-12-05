@@ -4,6 +4,7 @@ import Event from "../../classes/Event";
 import inviteSchema from "../../schemas/invite";
 import Channels from "../../enums/Channels";
 import Emojis from "../../enums/Emojis";
+import Colors from "../../enums/Colors";
 
 export default class MemberLeaveHandler extends Event {
     constructor(client: CustomClient) {
@@ -21,6 +22,7 @@ export default class MemberLeaveHandler extends Event {
         const channel = await member.guild.channels.fetch(Channels.InvitesLogs)
         const embed = new EmbedBuilder()
             .setTitle("Member left")
+            .setColor(Colors.Invisible)
             .setFields(
                 {
                     name: `${Emojis.BlurpleDot}Member Left`,
@@ -57,7 +59,9 @@ export default class MemberLeaveHandler extends Event {
                 inviteused!.RealUses!--
                 await inviteSchema.updateOne({ InviteCode: invite.code, GuildID: member.guild.id }, inviteused!)
             }
-            embed.addFields(
+            embed
+            .setThumbnail(inviter.avatarURL!())
+            .addFields(
                 {
                     name: `${Emojis.BlurpleDot} ${inviter.displayName} Real Invites`,
                     value: `${Emojis.BlurpleArrow} ${inviteused?.RealUses}`,
