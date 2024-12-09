@@ -144,6 +144,7 @@ export default class Product extends Command {
                 { name: "Detected", value: "https://i.imgur.com/feOLKNP.png" },
                 { name: "Updating", value: "https://i.imgur.com/PnWOzDG.png" },
                 { name: "Soon", value: "https://i.imgur.com/K5jvTRy.png" },
+                { name: "Available", value: "https://i.imgur.com/c3SVv8p.png"}
               ],
               required: true
             },
